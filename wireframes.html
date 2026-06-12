@@ -1,0 +1,1598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SAS Lineage Tool — Wireframes</title>
+<style>
+  :root {
+    --bg:        #FAFAF7;
+    --surface:   #FFFFFF;
+    --line:      #DDDDD6;
+    --line-soft: #ECECE6;
+    --ink:       #1A1A17;
+    --muted:     #6B6B66;
+    --muted-2:   #9A9A93;
+    --accent:    #2D6F73;
+    --accent-soft:#E3EFEF;
+    --warn:      #C77B3F;
+    --warn-soft: #F6E7D7;
+    --ok:        #4F7A4B;
+    --ok-soft:   #E2ECDD;
+    --danger:    #A33E3E;
+    --node:      #FFFFFF;
+    --node-sel:  #F3F8F8;
+    --code-bg:   #F6F5F0;
+    --hl:        #FFF1C2;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body { font-size: 14px; line-height: 1.45; }
+  code, pre, .mono { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+
+  /* ============ Page layout ============ */
+  .doc {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    max-width: 1640px;
+    margin: 0 auto;
+  }
+  .sidenav {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 20px;
+    border-right: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .sidenav h1 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: 0.02em;
+  }
+  .sidenav .sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+  .sidenav ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: scrn;
+  }
+  .sidenav li {
+    counter-increment: scrn;
+    margin-bottom: 2px;
+  }
+  .sidenav li a {
+    display: block;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: var(--ink);
+    border-left: 2px solid transparent;
+  }
+  .sidenav li a::before {
+    content: counter(scrn, decimal-leading-zero);
+    color: var(--muted-2);
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    margin-right: 8px;
+  }
+  .sidenav li a:hover { background: var(--surface); border-left-color: var(--accent); }
+  .sidenav .group {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-2);
+    margin: 18px 8px 6px;
+  }
+
+  .canvas { padding: 32px 40px 80px; }
+
+  /* ============ Frame (each wireframe screen) ============ */
+  .frame {
+    margin: 0 auto 56px;
+    max-width: 1280px;
+  }
+  .frame > header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .frame > header .num {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 12px;
+    color: var(--muted-2);
+  }
+  .frame > header h2 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 600;
+  }
+  .frame > header .note {
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+  .app {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  }
+  .app .titlebar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line);
+    background: #F4F4EE;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .app .titlebar .dots { display: flex; gap: 5px; }
+  .app .titlebar .dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .app .titlebar .url {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11.5px;
+    color: var(--ink);
+    flex: 0 0 auto;
+  }
+  .app .titlebar .demo-badge {
+    margin-left: auto;
+    background: var(--warn-soft);
+    color: var(--warn);
+    border: 1px solid var(--warn);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* progress strip shown across the top of every working stage */
+  .progress {
+    display: flex;
+    padding: 14px 22px;
+    gap: 0;
+    border-bottom: 1px solid var(--line-soft);
+    background: var(--surface);
+    font-size: 11.5px;
+  }
+  .progress .step {
+    flex: 1;
+    color: var(--muted);
+    border-top: 2px solid var(--line-soft);
+    padding-top: 8px;
+    position: relative;
+  }
+  .progress .step .n {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 10.5px;
+    color: var(--muted-2);
+  }
+  .progress .step.done { color: var(--ink); border-top-color: var(--accent); }
+  .progress .step.active { color: var(--ink); border-top-color: var(--accent); }
+  .progress .step.active .label { font-weight: 600; }
+  .progress .step.active::before {
+    content: "";
+    position: absolute;
+    top: -5px; left: 0;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .progress .step.done::before {
+    content: "✓";
+    position: absolute;
+    top: -10px; left: -2px;
+    width: 14px; height: 14px;
+    background: var(--accent); color: white;
+    border-radius: 50%;
+    font-size: 9px; line-height: 14px; text-align: center;
+  }
+
+  /* shared content body */
+  .body { padding: 28px 32px; }
+  .body.tight { padding: 18px 22px; }
+  .body.split {
+    display: grid;
+    padding: 0;
+    min-height: 560px;
+  }
+
+  /* form bits */
+  .field {
+    display: block;
+    margin-bottom: 16px;
+    max-width: 560px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 8px 11px;
+    font-size: 13px;
+    background: var(--surface);
+    font-family: ui-monospace, Menlo, monospace;
+    color: var(--ink);
+  }
+  .field .hint { font-size: 11.5px; color: var(--muted-2); margin-top: 4px; font-family: inherit; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 560px; }
+
+  .btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--surface);
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn.secondary { background: var(--surface); color: var(--ink); }
+  .btn.ghost { background: transparent; border-color: var(--line); color: var(--ink); }
+  .btn.danger { background: var(--surface); color: var(--danger); border-color: var(--danger); }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+
+  /* page heading inside a frame body */
+  .h {
+    font-size: 19px; font-weight: 600; margin: 0 0 4px;
+  }
+  .hsub { color: var(--muted); margin: 0 0 24px; font-size: 13px; }
+
+  /* gap card */
+  .gap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    max-width: 880px;
+  }
+  .gap-card {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px 18px;
+    background: var(--surface);
+  }
+  .gap-card.warn { border-color: var(--warn); background: #FCF7F0; }
+  .gap-card.ok { border-color: var(--ok); background: #F4F7F1; }
+  .gap-card h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .gap-card .count {
+    font-family: ui-monospace, Menlo, monospace;
+    background: var(--ink); color: var(--surface);
+    padding: 1px 7px; border-radius: 999px;
+    font-size: 11px; font-weight: 500;
+  }
+  .gap-card.warn .count { background: var(--warn); }
+  .gap-card.ok .count { background: var(--ok); }
+  .gap-card ul { margin: 6px 0 0; padding-left: 18px; }
+  .gap-card li { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--ink); }
+  .gap-card .empty { color: var(--muted); font-size: 12px; font-style: italic; }
+
+  /* ===== split lineage layout (left rail / canvas / code pane) ===== */
+  .split-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr 380px;
+    width: 100%;
+  }
+  .split-grid > section {
+    border-right: 1px solid var(--line-soft);
+    min-height: 560px;
+  }
+  .split-grid > section:last-child { border-right: none; }
+  .rail { padding: 16px 14px; background: #FBFBF7; }
+  .rail h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin: 0 0 10px;
+  }
+  .rail .search {
+    width: 100%; border: 1px solid var(--line); padding: 7px 10px;
+    border-radius: 4px; font-size: 12px; margin-bottom: 12px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  .rail ul { list-style: none; padding: 0; margin: 0; }
+  .rail li {
+    padding: 6px 8px; font-size: 12px; font-family: ui-monospace, Menlo, monospace;
+    border-radius: 3px; cursor: pointer; color: var(--ink);
+  }
+  .rail li.sel { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .rail li.dim { color: var(--muted-2); }
+
+  .graph {
+    position: relative;
+    background:
+      linear-gradient(var(--line-soft) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px) 0 0 / 24px 24px;
+    overflow: hidden;
+  }
+  .graph .floating-controls {
+    position: absolute; top: 12px; left: 12px; z-index: 2;
+    display: flex; gap: 6px;
+  }
+  .graph .ctrl {
+    width: 28px; height: 28px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--ink); cursor: pointer;
+  }
+  .graph .toolbar {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+    padding: 4px;
+    display: flex; gap: 4px;
+  }
+  .graph .toolbar button {
+    background: transparent; border: 0; padding: 4px 8px; font-size: 12px;
+    cursor: pointer; color: var(--ink); border-radius: 3px;
+  }
+  .graph .toolbar button:hover { background: var(--accent-soft); color: var(--accent); }
+
+  .code-pane { background: var(--surface); display: flex; flex-direction: column; }
+  .code-pane .head {
+    padding: 12px 16px; border-bottom: 1px solid var(--line-soft);
+  }
+  .code-pane .head .path { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--ink); }
+  .code-pane .head .meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .code-pane pre {
+    margin: 0; padding: 14px 0; background: var(--code-bg);
+    font-size: 11.5px; line-height: 1.55; overflow: auto; flex: 1;
+  }
+  .code-pane pre .ln {
+    display: inline-block; width: 32px; text-align: right; padding-right: 10px;
+    color: var(--muted-2); user-select: none;
+  }
+  .code-pane pre .hl-line { background: var(--hl); }
+  .code-pane pre .hl-line .ln { color: var(--ink); }
+  .code-pane .actions {
+    border-top: 1px solid var(--line-soft); padding: 10px 14px;
+    display: flex; gap: 8px;
+    background: #FBFBF7;
+  }
+
+  /* control pane (demo) */
+  .demo-panel { max-width: 880px; }
+  .demo-panel .group-title {
+    font-size: 11px; text-transform: uppercase; color: var(--muted);
+    letter-spacing: 0.06em; margin: 22px 0 10px;
+  }
+  .demo-panel .group-title:first-child { margin-top: 0; }
+  .segmented {
+    display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  }
+  .segmented button {
+    background: var(--surface); border: 0; padding: 7px 14px;
+    font-size: 12px; cursor: pointer; color: var(--ink);
+    border-right: 1px solid var(--line);
+  }
+  .segmented button:last-child { border-right: 0; }
+  .segmented button.on { background: var(--accent); color: white; font-weight: 600; }
+
+  /* diff list */
+  .diff {
+    border: 1px solid var(--line); border-radius: 6px;
+    font-family: ui-monospace, Menlo, monospace; font-size: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    max-width: 880px;
+  }
+  .diff .head {
+    background: #F4F4EE; padding: 8px 14px;
+    border-bottom: 1px solid var(--line); color: var(--muted);
+    font-size: 11px;
+  }
+  .diff .row {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    padding: 4px 14px;
+    border-bottom: 1px solid var(--line-soft);
+    max-width: none;
+    gap: 0;
+  }
+  .diff .row:last-child { border-bottom: 0; }
+  .diff .row.add { background: #F1F7EE; }
+  .diff .row.add .sign { color: var(--ok); }
+  .diff .row .sign { font-weight: 600; }
+
+  /* tree (column selection) */
+  .tree { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; max-width: 520px; }
+  .tree .t {
+    padding: 6px 8px; border-bottom: 1px solid var(--line-soft);
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .tree .t.head { font-weight: 600; background: #F4F4EE; }
+  .tree .t .arrow { color: var(--muted-2); width: 10px; }
+  .tree .t .indent { width: 16px; }
+  .tree .t input[type=checkbox] { margin: 0; }
+  .tree .t.sel { background: var(--accent-soft); }
+
+  /* dialog overlay */
+  .overlay {
+    position: relative;
+    height: 480px;
+    background: rgba(20,20,15,0.30);
+    display: grid; place-items: center;
+  }
+  .overlay .dialog {
+    width: 460px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.16);
+    padding: 22px;
+  }
+  .dialog h3 { margin: 0 0 4px; font-size: 15px; }
+  .dialog .sub { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+
+  /* progress (LLM) */
+  .progress-card {
+    max-width: 520px; padding: 28px;
+    border: 1px solid var(--line); border-radius: 8px;
+    text-align: center; background: var(--surface);
+    margin: 60px auto;
+  }
+  .spinner {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 3px solid var(--line); border-top-color: var(--accent);
+    margin: 0 auto 14px;
+    animation: spin 1.2s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* misc */
+  .pill {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 999px; font-size: 11px;
+    background: var(--accent-soft); color: var(--accent);
+    font-weight: 500;
+  }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.ok { background: var(--ok-soft); color: var(--ok); }
+
+  /* graph element styling (used in SVG) */
+  .node-rect { fill: var(--node); stroke: var(--ink); stroke-width: 1; }
+  .node-rect.sel { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+  .node-rect.synthetic { stroke-dasharray: 4 3; fill: #FFFCF1; stroke: var(--warn); }
+  .node-label { font-family: ui-monospace, Menlo, monospace; font-size: 11px; fill: var(--ink); }
+  .node-sub { font-family: ui-sans-serif, system-ui; font-size: 9.5px; fill: var(--muted); }
+  .edge { stroke: var(--ink); stroke-width: 1; fill: none; }
+  .edge.sel { stroke: var(--accent); stroke-width: 2; }
+  .edge-lbl-bg { fill: var(--surface); stroke: var(--line); }
+  .edge-lbl-bg.sel { stroke: var(--accent); }
+  .edge-lbl { font-family: ui-monospace, Menlo, monospace; font-size: 10px; fill: var(--ink); }
+
+  /* column lineage node groups */
+  .group-rect { fill: #FBFBF7; stroke: var(--line); stroke-width: 1; }
+  .group-title-svg { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; fill: var(--muted); font-weight: 600; }
+  .col-rect { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+  .col-rect.sel { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+
+  /* save outcome banner */
+  .banner {
+    border: 1px solid var(--ok); background: var(--ok-soft);
+    padding: 14px 18px; border-radius: 6px;
+    max-width: 880px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .banner.warn { border-color: var(--warn); background: var(--warn-soft); }
+  .banner .icon {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--ok); color: white;
+    display: grid; place-items: center; font-size: 13px;
+  }
+  .banner.warn .icon { background: var(--warn); }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <!-- =================== SIDE NAV =================== -->
+  <nav class="sidenav">
+    <h1>SAS Lineage Tool</h1>
+    <div class="sub">Wireframes · v0.1</div>
+    <div class="group">Demo</div>
+    <ol>
+      <li><a href="#s00">Demo control pane</a></li>
+    </ol>
+    <div class="group">Setup</div>
+    <ol start="2">
+      <li><a href="#s01">Connect repository</a></li>
+      <li><a href="#s02">Specify folders</a></li>
+      <li><a href="#s03">Initial analysis</a></li>
+      <li><a href="#s04">Stop &amp; reconnect</a></li>
+    </ol>
+    <div class="group">Table lineage</div>
+    <ol start="6">
+      <li><a href="#s05">Lineage explorer</a></li>
+      <li><a href="#s06">Add step (dialog)</a></li>
+      <li><a href="#s07">Break step (dialog)</a></li>
+      <li><a href="#s08">Save to branch</a></li>
+    </ol>
+    <div class="group">Column lineage</div>
+    <ol start="10">
+      <li><a href="#s09">Pick columns</a></li>
+      <li><a href="#s10">LLM in progress</a></li>
+      <li><a href="#s11">Column explorer</a></li>
+      <li><a href="#s12">Save to branch</a></li>
+    </ol>
+  </nav>
+
+  <!-- =================== SCREENS =================== -->
+  <main class="canvas">
+
+  <!-- ================================================
+       SCREEN 00 — Demo control pane
+       ================================================ -->
+  <section class="frame" id="s00">
+    <header>
+      <div class="num">00</div>
+      <h2>Demo control pane</h2>
+      <div class="note">Not part of the real product — steers what every later screen displays.</div>
+    </header>
+    <div class="app">
+      <div class="titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="url">lineage.local / __demo__</div>
+        <div class="demo-badge">DEMO MODE</div>
+      </div>
+      <div class="body">
+        <div class="demo-panel">
+          <h2 class="h">Steer the demo</h2>
+          <p class="hsub">Pre-fill every input the real product would normally collect, plus choose which branches to exercise. Open this pane any time via the <span class="pill warn">DEMO</span> badge.</p>
+
+          <div class="group-title">Repo &amp; folders (cosmetic — shown back on later screens)</div>
+          <div class="field">
+            <label>Repo URL</label>
+            <input value="git@github.internal:data-platform/sas-warehouse.git" />
+          </div>
+          <div class="row">
+            <div class="field"><label>Branch</label><input value="feature/lineage-curation" /></div>
+            <div class="field"><label>Auth method</label><input value="ssh-key (~/.ssh/id_ed25519)" /></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>SAS folder</label><input value="src/sas" /></div>
+            <div class="field"><label>Table-defs folder</label><input value="metadata/tables" /></div>
+          </div>
+          <div class="field" style="max-width: 272px"><label>ORA folder</label><input value="config/oracle" /></div>
+
+          <div class="group-title">Initial-analysis gap profile</div>
+          <div class="segmented">
+            <button>none</button>
+            <button class="on">minor</button>
+            <button>major</button>
+          </div>
+
+          <div class="group-title">Table set in the lineage graph</div>
+          <div class="field" style="max-width: 720px">
+            <textarea rows="4" style="resize: vertical">raw.cust_master, raw.orders, stg.customers, stg.customer_segments, stg.orders_clean, mart.orders_enriched, mart.sales_monthly, mart.top_segments</textarea>
+            <div class="hint">Comma-separated. Search list and graph honour this set.</div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Default focus table</label>
+              <select><option>mart.sales_monthly</option></select>
+            </div>
+            <div class="field">
+              <label>LLM result quality</label>
+              <select><option>clean</option><option>partial</option><option>noisy</option></select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Save outcome</label>
+              <select><option>success</option><option>conflict</option></select>
+            </div>
+            <div class="field">
+              <label>Skip to stage</label>
+              <select>
+                <option>— start at connect screen —</option>
+                <option>Initial analysis</option>
+                <option>Table lineage</option>
+                <option>Pick columns</option>
+                <option>Column lineage</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn">Apply &amp; start demo</button>
+            <button class="btn ghost">Reset to defaults</button>
+            <button class="btn ghost">Load demo-config.json…</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 01 — Connect repository
+       ================================================ -->
+  <section class="frame" id="s01">
+    <header><div class="num">01</div><h2>Connect to repository</h2><div class="note">Stage 1 of 8 · the user supplies the git target.</div></header>
+    <div class="app">
+      <div class="titlebar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="url">lineage.local</div>
+        <div class="demo-badge">DEMO MODE</div>
+      </div>
+      <div class="progress">
+        <div class="step active"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body">
+        <h2 class="h">Where is the code?</h2>
+        <p class="hsub">Point at a git branch. Everything else — SAS source, table definitions, connection details — lives inside that branch.</p>
+
+        <div class="field">
+          <label>Remote URL</label>
+          <input value="git@github.internal:data-platform/sas-warehouse.git" />
+          <div class="hint">HTTPS or SSH.</div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Branch</label><input value="feature/lineage-curation" /></div>
+          <div class="field">
+            <label>Authentication</label>
+            <select>
+              <option>SSH key (ambient)</option>
+              <option>Personal access token</option>
+              <option>None — public</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn">Connect</button>
+          <button class="btn ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 02 — Specify folders
+       ================================================ -->
+  <section class="frame" id="s02">
+    <header><div class="num">02</div><h2>Specify folders</h2><div class="note">Three paths within the branch.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / folders</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step active"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body">
+        <div class="banner">
+          <div class="icon">✓</div>
+          <div>
+            Connected to <span class="mono">data-platform/sas-warehouse</span> at <span class="mono">feature/lineage-curation</span>.<br />
+            <span style="color: var(--muted); font-size: 12px">HEAD: <span class="mono">a8c19f2</span> · last commit 4 hours ago.</span>
+          </div>
+        </div>
+
+        <h2 class="h">Tell us where things live</h2>
+        <p class="hsub">All paths are relative to the repo root.</p>
+
+        <div class="field">
+          <label>SAS code folder</label>
+          <input value="src/sas" />
+          <div class="hint">All <span class="mono">.sas</span> files in this folder (recursive) will be analysed.</div>
+        </div>
+        <div class="field">
+          <label>Table definitions folder</label>
+          <input value="metadata/tables" />
+          <div class="hint">CSV files with header <span class="mono">table_name, column_name, column_type</span>.</div>
+        </div>
+        <div class="field">
+          <label>ORA file folder</label>
+          <input value="config/oracle" />
+          <div class="hint">Files matching <span class="mono">*.ora</span>.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">Run initial analysis</button>
+          <button class="btn ghost">Back</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 03 — Initial analysis (gaps)
+       ================================================ -->
+  <section class="frame" id="s03">
+    <header><div class="num">03</div><h2>Initial analysis</h2><div class="note">Completeness check before any lineage work — decision point.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / analysis</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step active"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body">
+        <h2 class="h">We found 1 gap.</h2>
+        <p class="hsub">Lineage can still be produced with gaps present, but missing pieces will surface as dangling references in the graph. You can fix them now (in your repo) and reconnect, or proceed and patch up later.</p>
+
+        <!-- compact summary tiles -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 880px; margin-bottom: 22px;">
+          <div style="border: 1px solid var(--warn); background: #FCF7F0; border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--warn); font-weight: 600;">1</div>
+            <div style="font-size: 11.5px; color: var(--ink); margin-top: 2px;">Missing <code>%include</code></div>
+          </div>
+          <div style="border: 1px solid var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ok); font-weight: 600;">0</div>
+            <div style="font-size: 11.5px; color: var(--ink); margin-top: 2px;">Missing macros</div>
+          </div>
+          <div style="border: 1px solid var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ok); font-weight: 600;">0</div>
+            <div style="font-size: 11.5px; color: var(--ink); margin-top: 2px;">Unbound libnames</div>
+          </div>
+          <div style="border: 1px solid var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ok); font-weight: 600;">0</div>
+            <div style="font-size: 11.5px; color: var(--ink); margin-top: 2px;">Undefined tables</div>
+          </div>
+        </div>
+
+        <!-- issues table -->
+        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface);">
+          <div style="display: grid; grid-template-columns: 110px 180px 1fr 220px; padding: 10px 14px; background: #F4F4EE; border-bottom: 1px solid var(--line); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);">
+            <div>Severity</div>
+            <div>Category</div>
+            <div>Item</div>
+            <div>Source</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 110px 180px 1fr 220px; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); align-items: center; font-size: 12.5px;">
+            <div><span class="pill warn">WARN</span></div>
+            <div class="mono" style="font-size: 12px;">missing-include</div>
+            <div class="mono" style="font-size: 12px;">/sas/macros/clean_text.sas</div>
+            <div class="mono" style="font-size: 11.5px; color: var(--muted);">customers_load.sas:9</div>
+          </div>
+          <div style="padding: 11px 14px; color: var(--muted-2); font-size: 12px; font-style: italic; text-align: center;">
+            No other issues found.
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">Proceed to table lineage</button>
+          <button class="btn secondary">Stop — I'll fix the repo first</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 04 — Stop & reconnect (the alternate branch)
+       ================================================ -->
+  <section class="frame" id="s04">
+    <header><div class="num">04</div><h2>Stop &amp; reconnect</h2><div class="note">The "stop" branch from screen 03.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="body" style="padding: 80px 32px;">
+        <div style="max-width: 560px; margin: 0 auto; text-align: center;">
+          <div style="font-size: 32px; color: var(--muted-2); margin-bottom: 12px;">↺</div>
+          <h2 class="h">Session ended.</h2>
+          <p class="hsub">No state was kept — once you've updated the branch with the missing pieces, reconnect to pick up where you left off.</p>
+          <div class="diff" style="margin: 28px auto; text-align: left; max-width: 460px;">
+            <div class="head">YOUR TODO LIST</div>
+            <div class="row" style="grid-template-columns: 1fr"><span>• Add <span class="mono">/sas/macros/clean_text.sas</span> to the SAS folder</span></div>
+            <div class="row" style="grid-template-columns: 1fr"><span>• Commit &amp; push to <span class="mono">feature/lineage-curation</span></span></div>
+          </div>
+          <button class="btn">Reconnect</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 05 — Table lineage explorer (the big one)
+       ================================================ -->
+  <section class="frame" id="s05">
+    <header><div class="num">05</div><h2>Table lineage explorer</h2><div class="note">Search left · React Flow graph centre · code pane right.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / tables</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step active"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body split">
+        <div class="split-grid">
+
+          <!-- left rail -->
+          <section class="rail">
+            <h3>Tables (8)</h3>
+            <input class="search" placeholder="search…" value="sales" />
+            <ul>
+              <li class="dim">raw.cust_master</li>
+              <li class="dim">raw.orders</li>
+              <li class="dim">stg.customers</li>
+              <li class="dim">stg.customer_segments</li>
+              <li class="dim">stg.orders_clean</li>
+              <li class="dim">mart.orders_enriched</li>
+              <li class="sel">mart.sales_monthly</li>
+              <li class="dim">mart.top_segments</li>
+            </ul>
+            <h3 style="margin-top: 18px">Show</h3>
+            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Upstream</label>
+            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Downstream</label>
+            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" /> Synthetic nodes</label>
+          </section>
+
+          <!-- graph canvas -->
+          <section class="graph">
+            <div class="floating-controls">
+              <div class="ctrl">+</div>
+              <div class="ctrl">−</div>
+              <div class="ctrl" title="fit">⤢</div>
+            </div>
+            <div style="position: absolute; top: 18px; right: 16px; z-index: 2; font-size: 11.5px; color: var(--muted); background: var(--surface); border: 1px solid var(--line-soft); padding: 4px 10px; border-radius: 3px;">
+              Right-click any edge for step actions
+            </div>
+
+            <!-- right-click context menu (shown for demonstration) -->
+            <div style="position: absolute; top: 256px; left: 64%; z-index: 3; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; box-shadow: 0 6px 18px rgba(0,0,0,0.14); padding: 4px; width: 184px; font-size: 12.5px;">
+              <div style="padding: 6px 10px 7px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 1px solid var(--line-soft); margin-bottom: 3px;">
+                Step #5 · enriched → monthly
+              </div>
+              <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer;">View code</div>
+              <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer;">Edit step…</div>
+              <div style="border-top: 1px solid var(--line-soft); margin: 3px 0;"></div>
+              <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer;">+ Add new step…</div>
+              <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer; color: var(--danger);">↯ Break step (remove edge)</div>
+            </div>
+
+            <svg viewBox="0 0 700 520" style="width: 100%; height: 100%;">
+              <!-- nodes -->
+              <!-- raw.cust_master -->
+              <g>
+                <rect class="node-rect" x="20" y="40" width="150" height="46" rx="4" />
+                <text class="node-sub" x="30" y="58">RAW</text>
+                <text class="node-label" x="30" y="76">cust_master</text>
+              </g>
+              <!-- raw.orders -->
+              <g>
+                <rect class="node-rect" x="20" y="220" width="150" height="46" rx="4" />
+                <text class="node-sub" x="30" y="238">RAW</text>
+                <text class="node-label" x="30" y="256">orders</text>
+              </g>
+              <!-- stg.customers -->
+              <g>
+                <rect class="node-rect" x="220" y="40" width="170" height="46" rx="4" />
+                <text class="node-sub" x="230" y="58">STG</text>
+                <text class="node-label" x="230" y="76">customers</text>
+              </g>
+              <!-- stg.customer_segments -->
+              <g>
+                <rect class="node-rect" x="220" y="120" width="170" height="46" rx="4" />
+                <text class="node-sub" x="230" y="138">STG</text>
+                <text class="node-label" x="230" y="156">customer_segments</text>
+              </g>
+              <!-- stg.orders_clean -->
+              <g>
+                <rect class="node-rect" x="220" y="220" width="170" height="46" rx="4" />
+                <text class="node-sub" x="230" y="238">STG</text>
+                <text class="node-label" x="230" y="256">orders_clean</text>
+              </g>
+              <!-- mart.orders_enriched -->
+              <g>
+                <rect class="node-rect" x="430" y="160" width="170" height="46" rx="4" />
+                <text class="node-sub" x="440" y="178">MART</text>
+                <text class="node-label" x="440" y="196">orders_enriched</text>
+              </g>
+              <!-- mart.sales_monthly (selected) -->
+              <g>
+                <rect class="node-rect sel" x="430" y="300" width="170" height="46" rx="4" />
+                <text class="node-sub" x="440" y="318" style="fill: var(--accent)">MART</text>
+                <text class="node-label" x="440" y="336" style="fill: var(--accent); font-weight: 600">sales_monthly</text>
+              </g>
+              <!-- mart.top_segments -->
+              <g>
+                <rect class="node-rect" x="430" y="430" width="170" height="46" rx="4" />
+                <text class="node-sub" x="440" y="448">MART</text>
+                <text class="node-label" x="440" y="466">top_segments</text>
+              </g>
+
+              <!-- edges with step labels -->
+              <!-- raw.cust_master -> stg.customers (1) -->
+              <path class="edge" d="M170 63 C 195 63, 195 63, 220 63" marker-end="url(#arr)" />
+              <g><rect class="edge-lbl-bg" x="180" y="50" width="30" height="14" rx="3"/><text class="edge-lbl" x="186" y="60">#1</text></g>
+              <!-- stg.customers -> stg.customer_segments (2) -->
+              <path class="edge" d="M305 86 C 305 100, 305 100, 305 120" marker-end="url(#arr)" />
+              <g><rect class="edge-lbl-bg" x="290" y="96" width="30" height="14" rx="3"/><text class="edge-lbl" x="296" y="106">#2</text></g>
+              <!-- raw.orders -> stg.orders_clean (3) -->
+              <path class="edge" d="M170 243 C 195 243, 195 243, 220 243" marker-end="url(#arr)" />
+              <g><rect class="edge-lbl-bg" x="180" y="230" width="30" height="14" rx="3"/><text class="edge-lbl" x="186" y="240">#3</text></g>
+              <!-- stg.orders_clean -> mart.orders_enriched (4) -->
+              <path class="edge" d="M390 243 C 410 220, 410 200, 430 195" marker-end="url(#arr)" />
+              <!-- stg.customers -> mart.orders_enriched (4) -->
+              <path class="edge" d="M390 63 C 420 100, 410 160, 430 175" marker-end="url(#arr)" />
+              <!-- stg.customer_segments -> mart.orders_enriched (4) -->
+              <path class="edge" d="M390 143 C 410 160, 410 175, 430 185" marker-end="url(#arr)" />
+              <g><rect class="edge-lbl-bg" x="402" y="156" width="30" height="14" rx="3"/><text class="edge-lbl" x="408" y="166">#4</text></g>
+              <!-- mart.orders_enriched -> mart.sales_monthly (5) selected -->
+              <path class="edge sel" d="M515 206 C 515 240, 515 260, 515 300" marker-end="url(#arr-sel)" />
+              <g><rect class="edge-lbl-bg sel" x="498" y="246" width="34" height="14" rx="3"/><text class="edge-lbl" x="502" y="256" style="fill: var(--accent); font-weight:600">#5</text></g>
+              <!-- mart.sales_monthly -> mart.top_segments (6) -->
+              <path class="edge" d="M515 346 C 515 380, 515 400, 515 430" marker-end="url(#arr)" />
+              <g><rect class="edge-lbl-bg" x="498" y="380" width="34" height="14" rx="3"/><text class="edge-lbl" x="502" y="390">#6</text></g>
+
+              <defs>
+                <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#1A1A17" />
+                </marker>
+                <marker id="arr-sel" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#2D6F73" />
+                </marker>
+              </defs>
+            </svg>
+          </section>
+
+          <!-- code pane -->
+          <section class="code-pane">
+            <div class="head">
+              <div class="path">src/sas/sales_summary.sas</div>
+              <div class="meta">step #5 · lines 8–20 · target <span class="mono">mart.sales_monthly</span></div>
+            </div>
+            <pre><span class="ln"> 1</span> libname mart "/data/mart";
+<span class="ln"> 2</span>
+<span class="ln"> 3</span> /*------------------------------------------------------------------
+<span class="ln"> 4</span>  * sales_summary.sas
+<span class="ln"> 5</span>  * Roll up enriched orders into monthly summary
+<span class="ln"> 6</span>  *-----------------------------------------------------------------*/
+<span class="ln"> 7</span>
+<span class="hl-line"><span class="ln"> 8</span> proc sql;</span>
+<span class="hl-line"><span class="ln"> 9</span>     create table mart.sales_monthly as</span>
+<span class="hl-line"><span class="ln">10</span>     select</span>
+<span class="hl-line"><span class="ln">11</span>         put(order_date, yymmn6.) as month_id,</span>
+<span class="hl-line"><span class="ln">12</span>         country_code,</span>
+<span class="hl-line"><span class="ln">13</span>         customer_segment,</span>
+<span class="hl-line"><span class="ln">14</span>         count(distinct customer_id) as customers,</span>
+<span class="hl-line"><span class="ln">15</span>         count(*)                   as order_count,</span>
+<span class="hl-line"><span class="ln">16</span>         sum(net_amount)            as net_revenue,</span>
+<span class="hl-line"><span class="ln">17</span>         sum(gross_amount)          as gross_revenue,</span>
+<span class="hl-line"><span class="ln">18</span>         sum(discount_amount)       as total_discount</span>
+<span class="hl-line"><span class="ln">19</span>     from mart.orders_enriched</span>
+<span class="hl-line"><span class="ln">20</span>     group by 1, 2, 3;</span>
+<span class="ln">21</span> quit;</pre>
+            <div class="actions">
+              <button class="btn secondary">Edit step…</button>
+              <button class="btn ghost">Open file</button>
+              <div style="flex:1"></div>
+              <button class="btn">Save lineage…</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 06 — Add step dialog (redesigned)
+       ================================================ -->
+  <section class="frame" id="s06">
+    <header><div class="num">06</div><h2>Add step (dialog)</h2><div class="note">Opens from right-click → Add new step. Pick from already-identified code blocks rather than typing file + line numbers.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / tables</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="overlay">
+        <div class="dialog" style="width: 780px; padding: 0;">
+          <div style="padding: 22px 24px 16px; border-bottom: 1px solid var(--line-soft);">
+            <h3>Add a lineage step</h3>
+            <div class="sub">Choose source, target, and which already-identified code step backs the new edge.</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 320px 1fr; min-height: 320px;">
+
+            <!-- left: form -->
+            <div style="padding: 18px 22px; border-right: 1px solid var(--line-soft); background: #FBFBF7;">
+              <div class="field" style="margin-bottom: 14px; max-width: none;">
+                <label>From</label>
+                <select><option>mart.orders_enriched</option><option>stg.customers</option><option>stg.orders_clean</option></select>
+              </div>
+              <div class="field" style="margin-bottom: 14px; max-width: none;">
+                <label>To</label>
+                <select><option>mart.sales_monthly</option><option>mart.top_segments</option></select>
+              </div>
+
+              <div class="field" style="margin-bottom: 6px; max-width: none;">
+                <label>Identified code step</label>
+                <select>
+                  <option>sales_summary.sas:8–20 · proc sql → mart.sales_monthly</option>
+                  <option>sales_summary.sas:22–31 · proc sql → mart.top_segments</option>
+                  <option>orders_transform.sas:11–22 · proc sql → stg.orders_clean</option>
+                  <option>orders_transform.sas:24–33 · proc sql → mart.orders_enriched</option>
+                  <option>customers_load.sas:12–25 · proc sql → stg.customers</option>
+                  <option>customers_load.sas:27–33 · data step → stg.customer_segments</option>
+                </select>
+                <div class="hint">All code blocks the analyser identified as producing a table. Selected block previews on the right.</div>
+              </div>
+            </div>
+
+            <!-- right: code preview -->
+            <div style="display: flex; flex-direction: column;">
+              <div style="padding: 12px 16px; border-bottom: 1px solid var(--line-soft);">
+                <div class="mono" style="font-size: 12px; color: var(--ink);">src/sas/sales_summary.sas</div>
+                <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">lines 8–20 · produces <span class="mono">mart.sales_monthly</span></div>
+              </div>
+              <pre style="margin: 0; padding: 12px 0; background: var(--code-bg); font-size: 11px; line-height: 1.5; flex: 1; max-height: 240px; overflow: auto;"><span class="ln"> 8</span> proc sql;
+<span class="ln"> 9</span>     create table mart.sales_monthly as
+<span class="ln">10</span>     select
+<span class="ln">11</span>         put(order_date, yymmn6.) as month_id,
+<span class="ln">12</span>         country_code,
+<span class="ln">13</span>         customer_segment,
+<span class="ln">14</span>         count(distinct customer_id) as customers,
+<span class="ln">15</span>         count(*)                   as order_count,
+<span class="ln">16</span>         sum(net_amount)            as net_revenue,
+<span class="ln">17</span>         sum(gross_amount)          as gross_revenue,
+<span class="ln">18</span>         sum(discount_amount)       as total_discount
+<span class="ln">19</span>     from mart.orders_enriched
+<span class="ln">20</span>     group by 1, 2, 3;</pre>
+            </div>
+          </div>
+
+          <div style="padding: 14px 22px; border-top: 1px solid var(--line-soft); display: flex; gap: 10px; align-items: center;">
+            <div style="font-size: 11.5px; color: var(--muted);">This step will be added as <span class="mono">#7</span>.</div>
+            <div style="flex: 1;"></div>
+            <button class="btn ghost">Cancel</button>
+            <button class="btn">Add step</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 07 — Break step (remove lineage edge)
+       ================================================ -->
+  <section class="frame" id="s07">
+    <header><div class="num">07</div><h2>Break step (dialog)</h2><div class="note">Breaks a lineage relationship — removes the edge. No intermediate table is added.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / tables</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="overlay">
+        <div class="dialog">
+          <h3>Break this lineage step?</h3>
+          <div class="sub">The edge will be removed from the graph. The two tables stay; only the relationship between them goes.</div>
+
+          <div style="border: 1px solid var(--line); border-radius: 5px; padding: 14px 16px; margin-bottom: 16px; background: #FBFBF7; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;">
+            <div style="color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">Step #5 · sales_summary.sas:8–20</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span>mart.orders_enriched</span>
+              <span style="color: var(--danger);">─╳→</span>
+              <span>mart.sales_monthly</span>
+            </div>
+          </div>
+
+          <div style="background: var(--warn-soft); border: 1px solid var(--warn); padding: 11px 14px; border-radius: 5px; font-size: 12px; color: var(--ink); margin-bottom: 14px;">
+            <strong>Heads up.</strong> If column lineage already references this edge, those column-level entries will be marked stale and need re-tracing.
+          </div>
+
+          <div class="btn-row">
+            <button class="btn danger">Break step</button>
+            <button class="btn ghost">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 08 — Save table lineage
+       ================================================ -->
+  <section class="frame" id="s08">
+    <header><div class="num">08</div><h2>Save table lineage to branch</h2><div class="note">Diff view, confirm write.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / save-tables</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step active"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body">
+        <h2 class="h">Commit table lineage to <span class="mono">feature/lineage-curation</span></h2>
+        <p class="hsub">Summary of what gets written to <span class="mono">lineage/table-lineage.csv</span>.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 880px; margin-bottom: 24px;">
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">8</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Lineage rows</div>
+          </div>
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">6</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Distinct steps</div>
+          </div>
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">8</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Tables involved</div>
+          </div>
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">3</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">SAS files referenced</div>
+          </div>
+        </div>
+
+        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; background: var(--surface); margin-bottom: 18px; font-size: 12.5px;">
+          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Target file</span>
+            <span class="mono">lineage/table-lineage.csv</span>
+            <span class="pill ok">NEW FILE</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Branch</span>
+            <span class="mono">feature/lineage-curation</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: baseline;">
+            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Schema</span>
+            <span class="mono">target_table, source_table, step_no, sas_file, start_line, end_line</span>
+          </div>
+        </div>
+
+        <div class="field" style="max-width: 880px;">
+          <label>Commit message</label>
+          <input value="Add table-level lineage from initial curation pass" />
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">Commit &amp; push</button>
+          <button class="btn ghost">Back to graph</button>
+          <div style="flex:1"></div>
+          <button class="btn secondary">Continue to column lineage →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 09 — Pick columns
+       ================================================ -->
+  <section class="frame" id="s09">
+    <header><div class="num">09</div><h2>Pick columns to trace</h2><div class="note">Multi-select tree, table → columns.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / columns</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step done"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step active"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body">
+        <h2 class="h">Which columns matter?</h2>
+        <p class="hsub">Pick one or more. The tool will trace each back through the table lineage you just saved, using an LLM to interpret the SAS in each step.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1080px;">
+          <div>
+            <input class="search" placeholder="search columns…" style="margin-bottom: 12px; width: 100%; max-width: 520px;" value="revenue" />
+            <div class="tree">
+              <div class="t head"><span class="arrow">▾</span><input type="checkbox" /> mart.sales_monthly</div>
+              <div class="t"><span class="indent"></span><span class="arrow"></span><input type="checkbox" /> month_id</div>
+              <div class="t"><span class="indent"></span><span class="arrow"></span><input type="checkbox" /> country_code</div>
+              <div class="t"><span class="indent"></span><span class="arrow"></span><input type="checkbox" /> customer_segment</div>
+              <div class="t"><span class="indent"></span><span class="arrow"></span><input type="checkbox" /> customers</div>
+              <div class="t"><span class="indent"></span><span class="arrow"></span><input type="checkbox" /> order_count</div>
+              <div class="t sel"><span class="indent"></span><span class="arrow"></span><input type="checkbox" checked /> <strong>net_revenue</strong></div>
+              <div class="t sel"><span class="indent"></span><span class="arrow"></span><input type="checkbox" checked /> <strong>gross_revenue</strong></div>
+              <div class="t"><span class="indent"></span><span class="arrow"></span><input type="checkbox" /> total_discount</div>
+              <div class="t head"><span class="arrow">▸</span><input type="checkbox" /> mart.top_segments</div>
+              <div class="t head"><span class="arrow">▸</span><input type="checkbox" /> mart.orders_enriched</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.06em; margin: 0 0 10px;">Selected (2)</h3>
+            <div style="border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; background: var(--surface);">
+              <div class="mono" style="font-size: 12px; padding: 4px 0;">mart.sales_monthly.net_revenue <span style="color: var(--muted-2); float: right; cursor: pointer">×</span></div>
+              <div class="mono" style="font-size: 12px; padding: 4px 0;">mart.sales_monthly.gross_revenue <span style="color: var(--muted-2); float: right; cursor: pointer">×</span></div>
+            </div>
+            <p style="font-size: 12.5px; color: var(--muted); margin-top: 14px;">
+              Each column will be traced back to its earliest known source. Steps already in your table lineage will be reused.
+              Tracing 2 columns through 5 upstream tables — usually under a minute.
+            </p>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">Trace selected columns</button>
+          <button class="btn ghost">Back</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 10 — LLM in progress
+       ================================================ -->
+  <section class="frame" id="s10">
+    <header><div class="num">10</div><h2>LLM in progress</h2><div class="note">Brief loading state while column lineage is generated.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / columns / trace</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="body">
+        <div class="progress-card">
+          <div class="spinner"></div>
+          <h3 style="margin: 0 0 4px; font-size: 14px;">Tracing 2 columns…</h3>
+          <div style="color: var(--muted); font-size: 12px; margin-bottom: 16px;">Reading SAS for steps #1 – #5</div>
+          <div style="background: var(--code-bg); padding: 10px 14px; border-radius: 4px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; text-align: left; color: var(--muted);">
+            <div>✓ mart.sales_monthly.net_revenue → mart.orders_enriched.net_amount</div>
+            <div>✓ mart.orders_enriched.net_amount → stg.orders_clean.net_amount</div>
+            <div style="color: var(--accent)">→ stg.orders_clean.net_amount → raw.orders.??</div>
+            <div style="color: var(--muted-2)">… mart.sales_monthly.gross_revenue (pending)</div>
+          </div>
+          <button class="btn ghost" style="margin-top: 16px;">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 11 — Column lineage explorer
+       ================================================ -->
+  <section class="frame" id="s11">
+    <header><div class="num">11</div><h2>Column lineage explorer</h2><div class="note">Columns grouped by table · edges typed · steps cannot be added at this level.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / columns</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step done"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step done"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step active"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body split">
+        <div class="split-grid">
+
+          <!-- left rail -->
+          <section class="rail">
+            <h3>Traced columns (2)</h3>
+            <input class="search" placeholder="search…" />
+            <ul>
+              <li class="sel">sales_monthly.net_revenue</li>
+              <li class="dim">sales_monthly.gross_revenue</li>
+            </ul>
+            <h3 style="margin-top: 18px;">Show</h3>
+            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Direct contributors</label>
+            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Indirect contributors</label>
+
+            <h3 style="margin-top: 18px;">Edge legend</h3>
+            <div style="font-size: 11px; color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">Direct (solid)</div>
+            <div style="font-size: 11.5px; line-height: 1.7; color: var(--muted)">
+              <div><span style="display:inline-block; width: 18px; height: 2px; background: var(--ink); vertical-align: middle"></span> &nbsp; Identity</div>
+              <div><span style="display:inline-block; width: 18px; height: 2px; background: var(--accent); vertical-align: middle"></span> &nbsp; Transformation</div>
+              <div><span style="display:inline-block; width: 18px; height: 2px; background: var(--ink); vertical-align: middle"></span> &nbsp; Aggregation <span class="mono" style="color: var(--muted-2); font-size: 10px;">Σ</span></div>
+            </div>
+            <div style="font-size: 11px; color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.04em; margin: 10px 0 6px;">Indirect (dashed)</div>
+            <div style="font-size: 11.5px; line-height: 1.7; color: var(--muted)">
+              <div><span style="display:inline-block; width: 18px; border-top: 2px dashed var(--warn); vertical-align: middle; height: 2px;"></span> &nbsp; Filter</div>
+              <div><span style="display:inline-block; width: 18px; border-top: 2px dashed var(--muted); vertical-align: middle; height: 2px;"></span> &nbsp; Group-by</div>
+              <div><span style="display:inline-block; width: 18px; border-top: 2px dashed var(--muted); vertical-align: middle; height: 2px;"></span> &nbsp; Join key</div>
+            </div>
+          </section>
+
+          <!-- graph -->
+          <section class="graph">
+            <div class="floating-controls">
+              <div class="ctrl">+</div><div class="ctrl">−</div><div class="ctrl">⤢</div>
+            </div>
+            <div class="toolbar">
+              <button style="color: var(--muted-2); cursor: not-allowed">+ Add step</button>
+              <button>✎ Edit logic</button>
+            </div>
+            <div style="position: absolute; top: 12px; left: 80px; font-size: 11px; color: var(--muted);">Step structure is fixed at table level — only logic can be edited here.</div>
+
+            <svg viewBox="0 0 800 460" style="width: 100%; height: 100%;">
+              <!-- ============ group: raw.orders ============ -->
+              <g>
+                <rect class="group-rect" x="20" y="30" width="170" height="200" rx="6" />
+                <text class="group-title-svg" x="30" y="50">RAW.ORDERS</text>
+                <rect class="col-rect" x="30" y="65" width="150" height="26" rx="3" />
+                <text class="node-label" x="40" y="83">gross_amt</text>
+                <rect class="col-rect" x="30" y="97" width="150" height="26" rx="3" />
+                <text class="node-label" x="40" y="115">discount_amt</text>
+                <rect class="col-rect" x="30" y="129" width="150" height="26" rx="3" />
+                <text class="node-label" x="40" y="147">order_status</text>
+                <rect class="col-rect" x="30" y="161" width="150" height="26" rx="3" />
+                <text class="node-label" x="40" y="179">customer_id</text>
+              </g>
+
+              <!-- ============ group: stg.orders_clean ============ -->
+              <g>
+                <rect class="group-rect" x="220" y="120" width="170" height="110" rx="6" />
+                <text class="group-title-svg" x="230" y="140">STG.ORDERS_CLEAN</text>
+                <rect class="col-rect sel" x="230" y="155" width="150" height="28" rx="3" />
+                <text class="node-label" x="240" y="174" style="fill: var(--accent); font-weight: 600">net_amount</text>
+                <rect class="col-rect" x="230" y="189" width="150" height="26" rx="3" />
+                <text class="node-label" x="240" y="207">customer_id</text>
+              </g>
+
+              <!-- ============ group: mart.orders_enriched ============ -->
+              <g>
+                <rect class="group-rect" x="420" y="30" width="180" height="200" rx="6" />
+                <text class="group-title-svg" x="430" y="50">MART.ORDERS_ENRICHED</text>
+                <rect class="col-rect" x="430" y="65" width="160" height="26" rx="3" />
+                <text class="node-label" x="440" y="83">net_amount</text>
+                <rect class="col-rect" x="430" y="97" width="160" height="26" rx="3" />
+                <text class="node-label" x="440" y="115">order_date</text>
+                <rect class="col-rect" x="430" y="129" width="160" height="26" rx="3" />
+                <text class="node-label" x="440" y="147">country_code</text>
+                <rect class="col-rect" x="430" y="161" width="160" height="26" rx="3" />
+                <text class="node-label" x="440" y="179">customer_segment</text>
+              </g>
+
+              <!-- ============ group: mart.sales_monthly ============ -->
+              <g>
+                <rect class="group-rect" x="630" y="280" width="150" height="70" rx="6" />
+                <text class="group-title-svg" x="640" y="300">MART.SALES_MONTHLY</text>
+                <rect class="col-rect sel" x="640" y="312" width="130" height="30" rx="3" />
+                <text class="node-label" x="650" y="332" style="fill: var(--accent); font-weight: 600">net_revenue</text>
+              </g>
+
+              <!-- ============ DIRECT edges (solid) ============ -->
+              <!-- DIRECT TRANSFORMATION: gross_amt -> net_amount  (solid teal) -->
+              <path d="M180 78 C 205 78, 205 169, 230 169" stroke="#2D6F73" stroke-width="2" fill="none" marker-end="url(#arr-acc)" />
+              <!-- DIRECT TRANSFORMATION: discount_amt -> net_amount (solid teal) -->
+              <path d="M180 110 C 205 110, 205 169, 230 169" stroke="#2D6F73" stroke-width="2" fill="none" marker-end="url(#arr-acc)" />
+              <!-- DIRECT IDENTITY: orders_clean.net_amount -> orders_enriched.net_amount (solid black, thin) -->
+              <path d="M380 169 C 405 169, 405 78, 430 78" stroke="#1A1A17" stroke-width="1.2" fill="none" marker-end="url(#arr)" />
+              <!-- DIRECT AGGREGATION: orders_enriched.net_amount -> sales_monthly.net_revenue (solid black, thicker, Σ label) -->
+              <path d="M590 78 C 620 78, 620 327, 640 327" stroke="#1A1A17" stroke-width="2" fill="none" marker-end="url(#arr)" />
+              <g>
+                <circle cx="618" cy="200" r="10" fill="#FFFFFF" stroke="#1A1A17" stroke-width="1.2"/>
+                <text x="618" y="204" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" font-weight="700" fill="#1A1A17">Σ</text>
+              </g>
+
+              <!-- ============ INDIRECT edges (dashed) ============ -->
+              <!-- INDIRECT FILTER: order_status -> net_amount (dashed orange) -->
+              <path d="M180 142 C 205 142, 205 169, 230 169" stroke="#C77B3F" stroke-width="1.6" stroke-dasharray="5 3" fill="none" marker-end="url(#arr-warn)" />
+              <g><rect class="edge-lbl-bg" x="184" y="148" width="40" height="14" rx="3" stroke="#C77B3F"/><text x="188" y="158" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#C77B3F">FILTER</text></g>
+
+              <!-- INDIRECT JOIN: orders_clean.customer_id -> orders_enriched.net_amount (dashed muted) -->
+              <path d="M380 202 C 405 202, 405 78, 430 78" stroke="#6B6B66" stroke-width="1.4" stroke-dasharray="5 3" fill="none" marker-end="url(#arr-muted)" />
+              <g><rect class="edge-lbl-bg" x="383" y="120" width="30" height="14" rx="3" stroke="#6B6B66"/><text x="386" y="130" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#6B6B66">JOIN</text></g>
+
+              <!-- INDIRECT GROUP_BY: orders_enriched.order_date -> sales_monthly.net_revenue (dashed muted) -->
+              <path d="M590 110 C 615 110, 615 327, 640 327" stroke="#6B6B66" stroke-width="1.4" stroke-dasharray="5 3" fill="none" marker-end="url(#arr-muted)" />
+              <!-- INDIRECT GROUP_BY: orders_enriched.country_code -> sales_monthly.net_revenue (dashed muted) -->
+              <path d="M590 142 C 612 142, 612 327, 640 327" stroke="#6B6B66" stroke-width="1.4" stroke-dasharray="5 3" fill="none" marker-end="url(#arr-muted)" />
+              <!-- INDIRECT GROUP_BY: orders_enriched.customer_segment -> sales_monthly.net_revenue (dashed muted) -->
+              <path d="M590 174 C 610 174, 610 327, 640 327" stroke="#6B6B66" stroke-width="1.4" stroke-dasharray="5 3" fill="none" marker-end="url(#arr-muted)" />
+              <g><rect class="edge-lbl-bg" x="595" y="245" width="55" height="14" rx="3" stroke="#6B6B66"/><text x="599" y="255" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#6B6B66">GROUP BY</text></g>
+
+              <defs>
+                <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#1A1A17" />
+                </marker>
+                <marker id="arr-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#2D6F73" />
+                </marker>
+                <marker id="arr-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#C77B3F" />
+                </marker>
+                <marker id="arr-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#6B6B66" />
+                </marker>
+              </defs>
+            </svg>
+          </section>
+
+          <!-- code + logic editor as full form -->
+          <section class="code-pane">
+            <div class="head">
+              <div class="path">src/sas/sales_summary.sas</div>
+              <div class="meta">step #5 · editing edge <span class="mono">orders_enriched.net_amount → sales_monthly.net_revenue</span></div>
+            </div>
+            <pre style="max-height: 130px; flex: none;"><span class="ln">15</span>     count(*)                   as order_count,
+<span class="hl-line"><span class="ln">16</span>     sum(net_amount)            as net_revenue,</span>
+<span class="ln">17</span>     sum(gross_amount)          as gross_revenue,
+<span class="ln">18</span>     sum(discount_amount)       as total_discount
+<span class="ln">19</span> from mart.orders_enriched
+<span class="ln">20</span> group by 1, 2, 3;</pre>
+
+            <div style="padding: 14px 16px; border-top: 1px solid var(--line-soft); background: #FBFBF7; flex: 1; overflow-y: auto;">
+
+              <!-- Output -->
+              <div style="font-size: 10.5px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 6px;">Output field</div>
+              <div style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; padding: 6px 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; margin-bottom: 14px;">
+                mart.sales_monthly.net_revenue
+              </div>
+
+              <!-- Input field group -->
+              <div style="font-size: 10.5px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 6px;">Input field</div>
+              <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 6px; margin-bottom: 6px;">
+                <input value="sas" placeholder="namespace" style="border: 1px solid var(--line); padding: 5px 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; border-radius: 3px;" />
+                <input value="mart.orders_enriched" placeholder="dataset" style="border: 1px solid var(--line); padding: 5px 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; border-radius: 3px;" />
+              </div>
+              <input value="net_amount" placeholder="field" style="width: 100%; border: 1px solid var(--line); padding: 5px 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; border-radius: 3px; margin-bottom: 16px;" />
+
+              <!-- Transformations list -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div style="font-size: 10.5px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.06em;">Transformations (1)</div>
+                <button style="background: transparent; border: 1px dashed var(--line); color: var(--muted); padding: 3px 8px; border-radius: 3px; font-size: 11px; cursor: pointer;">+ Add transformation</button>
+              </div>
+
+              <!-- Transformation #1 -->
+              <div style="border: 1px solid var(--line); border-radius: 4px; background: var(--surface); padding: 10px 12px; margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: var(--muted-2);">#1</span>
+                  <span style="color: var(--muted-2); font-size: 14px; cursor: pointer;">×</span>
+                </div>
+
+                <div style="font-size: 10.5px; color: var(--muted); margin-bottom: 4px;">Type</div>
+                <div class="segmented" style="font-size: 11px; margin-bottom: 10px;">
+                  <button class="on" style="padding: 4px 12px;">Direct</button>
+                  <button style="padding: 4px 12px;">Indirect</button>
+                </div>
+
+                <div style="font-size: 10.5px; color: var(--muted); margin-bottom: 4px;">Subtype</div>
+                <select style="width: 100%; border: 1px solid var(--line); padding: 5px 8px; font-size: 12px; border-radius: 3px; margin-bottom: 10px; font-family: ui-monospace, Menlo, monospace;">
+                  <option>AGGREGATION</option>
+                  <option>IDENTITY</option>
+                  <option>TRANSFORMATION</option>
+                </select>
+
+                <div style="font-size: 10.5px; color: var(--muted); margin-bottom: 4px;">Description</div>
+                <textarea rows="2" style="width: 100%; border: 1px solid var(--line); padding: 6px 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; border-radius: 3px; margin-bottom: 10px;">sum(net_amount) grouped by month_id, country_code, customer_segment</textarea>
+
+                <label style="font-size: 11.5px; display: flex; align-items: center; gap: 6px;">
+                  <input type="checkbox" />
+                  <span>Masking applied</span>
+                </label>
+              </div>
+
+              <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <button class="btn">Save</button>
+                <button class="btn ghost">Revert</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SCREEN 12 — Save column lineage
+       ================================================ -->
+  <section class="frame" id="s12">
+    <header><div class="num">12</div><h2>Save column lineage to branch</h2><div class="note">OpenLineage JSON, write-confirm.</div></header>
+    <div class="app">
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / save-columns</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="progress">
+        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
+        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
+        <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
+        <div class="step done"><div class="n">05</div><div class="label">Save tables</div></div>
+        <div class="step done"><div class="n">06</div><div class="label">Pick columns</div></div>
+        <div class="step done"><div class="n">07</div><div class="label">Column lineage</div></div>
+        <div class="step active"><div class="n">08</div><div class="label">Save columns</div></div>
+      </div>
+      <div class="body">
+        <h2 class="h">Commit column lineage to <span class="mono">feature/lineage-curation</span></h2>
+        <p class="hsub">Summary of what gets written to <span class="mono">lineage/column-lineage.json</span> (OpenLineage column-lineage facet).</p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 880px; margin-bottom: 18px;">
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">2</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Output columns traced</div>
+          </div>
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">9</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Input field mappings</div>
+          </div>
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--accent); font-weight: 600;">4</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Direct transformations</div>
+          </div>
+          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--warn); font-weight: 600;">5</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Indirect transformations</div>
+          </div>
+        </div>
+
+        <!-- subtype breakdown -->
+        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; background: var(--surface); margin-bottom: 18px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 10px;">Subtype breakdown</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px;">
+            <span class="pill">AGGREGATION × 1</span>
+            <span class="pill">IDENTITY × 1</span>
+            <span class="pill">TRANSFORMATION × 2</span>
+            <span class="pill warn">GROUP_BY × 3</span>
+            <span class="pill warn">JOIN × 1</span>
+            <span class="pill warn">FILTER × 1</span>
+          </div>
+        </div>
+
+        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; background: var(--surface); margin-bottom: 18px; font-size: 12.5px;">
+          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Target file</span>
+            <span class="mono">lineage/column-lineage.json</span>
+            <span class="pill ok">NEW FILE</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Branch</span>
+            <span class="mono">feature/lineage-curation</span>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: baseline;">
+            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Schema</span>
+            <span class="mono" style="font-size: 11.5px;">openlineage.io/spec/facets/1-2-0/ColumnLineageDatasetFacet.json</span>
+          </div>
+        </div>
+
+        <div class="field" style="max-width: 880px;">
+          <label>Commit message</label>
+          <input value="Add column lineage for 2 mart.sales_monthly columns" />
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">Commit &amp; push</button>
+          <button class="btn ghost">Back to column graph</button>
+          <div style="flex:1"></div>
+          <button class="btn secondary">Finish &amp; disconnect</button>
+        </div>
+
+        <div style="margin-top: 28px; padding: 14px 18px; border: 1px dashed var(--line); background: #FBFBF7; border-radius: 6px; max-width: 880px; font-size: 12.5px; color: var(--muted);">
+          <strong style="color: var(--ink)">After commit:</strong> the branch contains <span class="mono">lineage/table-lineage.csv</span> and <span class="mono">lineage/column-lineage.json</span>. Open a PR from <span class="mono">feature/lineage-curation</span> to merge the curated lineage into <span class="mono">main</span>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+</body>
+</html>

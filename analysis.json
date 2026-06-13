@@ -1,0 +1,12 @@
+{
+  "$schema": "SAS Lineage Analysis Tool — pre-computed Analysis-tab issues (§3.3)",
+  "issues": [
+    {
+      "severity": "WARN",
+      "category": "missing-include",
+      "item": "/sas/macros/clean_text.sas",
+      "sasFile": "customers_load.sas",
+      "line": 11
+    }
+  ]
+}

@@ -512,7 +512,7 @@
   <!-- =================== SIDE NAV =================== -->
   <nav class="sidenav">
     <h1>SAS Lineage Tool</h1>
-    <div class="sub">Wireframes · v0.1</div>
+    <div class="sub">Wireframes · v0.2</div>
     <div class="group">Demo</div>
     <ol>
       <li><a href="#s00">Demo control pane</a></li>
@@ -524,19 +524,21 @@
       <li><a href="#s03">Initial analysis</a></li>
       <li><a href="#s04">Stop &amp; reconnect</a></li>
     </ol>
-    <div class="group">Table lineage</div>
+    <div class="group">Step lineage (tables)</div>
     <ol start="6">
-      <li><a href="#s05">Lineage explorer</a></li>
+      <li><a href="#s05">Step lineage explorer</a></li>
       <li><a href="#s06">Add step (dialog)</a></li>
       <li><a href="#s07">Break step (dialog)</a></li>
-      <li><a href="#s08">Save to branch</a></li>
     </ol>
     <div class="group">Column lineage</div>
-    <ol start="10">
-      <li><a href="#s09">Pick columns</a></li>
-      <li><a href="#s10">LLM in progress</a></li>
-      <li><a href="#s11">Column explorer</a></li>
-      <li><a href="#s12">Save to branch</a></li>
+    <ol start="9">
+      <li><a href="#s08">Pick columns</a></li>
+      <li><a href="#s09">LLM in progress</a></li>
+      <li><a href="#s10">Column explorer</a></li>
+    </ol>
+    <div class="group">Commit</div>
+    <ol start="12">
+      <li><a href="#s11">Save to branch</a></li>
     </ol>
   </nav>
 
@@ -561,40 +563,69 @@
       <div class="body">
         <div class="demo-panel">
           <h2 class="h">Steer the demo</h2>
-          <p class="hsub">Pre-fill every input the real product would normally collect, plus choose which branches to exercise. Open this pane any time via the <span class="pill warn">DEMO</span> badge.</p>
+          <p class="hsub">Upload the files the real tool would read from a git branch, plus knobs for the behaviour you want to demonstrate. Repo URL and branch belong on the connect screen, not here. Open this pane any time via the <span class="pill warn">DEMO</span> badge.</p>
 
-          <div class="group-title">Repo &amp; folders (cosmetic — shown back on later screens)</div>
-          <div class="field">
-            <label>Repo URL</label>
-            <input value="git@github.internal:data-platform/sas-warehouse.git" />
-          </div>
-          <div class="row">
-            <div class="field"><label>Branch</label><input value="feature/lineage-curation" /></div>
-            <div class="field"><label>Auth method</label><input value="ssh-key (~/.ssh/id_ed25519)" /></div>
-          </div>
-          <div class="row">
-            <div class="field"><label>SAS folder</label><input value="src/sas" /></div>
-            <div class="field"><label>Table-defs folder</label><input value="metadata/tables" /></div>
-          </div>
-          <div class="field" style="max-width: 272px"><label>ORA folder</label><input value="config/oracle" /></div>
+          <div class="group-title">Inputs (drop files in)</div>
 
-          <div class="group-title">Initial-analysis gap profile</div>
-          <div class="segmented">
-            <button>none</button>
-            <button class="on">minor</button>
-            <button>major</button>
+          <!-- SAS files: multi-file -->
+          <div style="border: 1px dashed var(--line); border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; background: #FBFBF7;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <div style="font-size: 12px; font-weight: 600;">SAS files <span style="color: var(--muted); font-weight: 400;">(.sas — multiple allowed)</span></div>
+              <button class="btn ghost" style="padding: 4px 10px; font-size: 11.5px;">+ Add files</button>
+            </div>
+            <div style="font-size: 12px; font-family: ui-monospace, Menlo, monospace; color: var(--ink); display: grid; gap: 4px;">
+              <div style="display: flex; justify-content: space-between; padding: 3px 0;"><span>customers_load.sas</span><span style="color: var(--muted);">2.1 KB · 59 lines</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 3px 0;"><span>orders_transform.sas</span><span style="color: var(--muted);">1.3 KB · 37 lines</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 3px 0;"><span>sales_summary.sas</span><span style="color: var(--muted);">1.1 KB · 38 lines</span></div>
+            </div>
           </div>
 
-          <div class="group-title">Table set in the lineage graph</div>
-          <div class="field" style="max-width: 720px">
-            <textarea rows="4" style="resize: vertical">raw.cust_master, raw.orders, stg.customers, stg.customer_segments, stg.orders_clean, mart.orders_enriched, mart.sales_monthly, mart.top_segments</textarea>
-            <div class="hint">Comma-separated. Search list and graph honour this set.</div>
+          <!-- Table definitions CSV: single file -->
+          <div style="border: 1px dashed var(--line); border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; background: #FBFBF7; display: flex; align-items: center; gap: 14px;">
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Table definitions <span style="color: var(--muted); font-weight: 400;">(single CSV)</span></div>
+              <div style="font-size: 12px; font-family: ui-monospace, Menlo, monospace;">table-definitions.csv <span style="color: var(--muted);">· 1.8 KB · 56 rows</span></div>
+            </div>
+            <button class="btn ghost" style="padding: 4px 10px; font-size: 11.5px;">Replace</button>
+          </div>
+
+          <!-- ORA file: single -->
+          <div style="border: 1px dashed var(--line); border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; background: #FBFBF7; display: flex; align-items: center; gap: 14px;">
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Oracle connections <span style="color: var(--muted); font-weight: 400;">(single .ora)</span></div>
+              <div style="font-size: 12px; font-family: ui-monospace, Menlo, monospace;">connections.ora <span style="color: var(--muted);">· 0.4 KB · 2 entries</span></div>
+            </div>
+            <button class="btn ghost" style="padding: 4px 10px; font-size: 11.5px;">Replace</button>
+          </div>
+
+          <!-- Optional pre-computed lineage -->
+          <div style="border: 1px dashed var(--line); border-radius: 6px; padding: 12px 16px; margin-bottom: 6px; background: #FBFBF7;">
+            <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">Optional pre-computed lineage <span style="color: var(--muted); font-weight: 400;">(skip computation, jump to viewing)</span></div>
+            <div style="display: flex; gap: 14px;">
+              <div style="flex: 1; display: flex; justify-content: space-between; padding: 4px 8px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px; font-size: 12px; font-family: ui-monospace, Menlo, monospace;">
+                <span>step-lineage.csv</span><span style="color: var(--muted);">9 rows</span>
+              </div>
+              <div style="flex: 1; display: flex; justify-content: space-between; padding: 4px 8px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px; font-size: 12px; font-family: ui-monospace, Menlo, monospace;">
+                <span>column-lineage.json</span><span style="color: var(--muted);">3 datasets</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="group-title">Behaviour</div>
+
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em;">Initial-analysis gap profile</label>
+            <div class="segmented">
+              <button>none</button>
+              <button class="on">minor</button>
+              <button>major</button>
+            </div>
           </div>
 
           <div class="row">
             <div class="field">
               <label>Default focus table</label>
-              <select><option>mart.sales_monthly</option></select>
+              <select><option>stg.customers @v1</option><option>work.customers @v3</option><option>mart.sales_monthly @v1</option></select>
             </div>
             <div class="field">
               <label>LLM result quality</label>
@@ -612,9 +643,10 @@
               <select>
                 <option>— start at connect screen —</option>
                 <option>Initial analysis</option>
-                <option>Table lineage</option>
+                <option>Step lineage</option>
                 <option>Pick columns</option>
                 <option>Column lineage</option>
+                <option>Save</option>
               </select>
             </div>
           </div>
@@ -633,7 +665,7 @@
        SCREEN 01 — Connect repository
        ================================================ -->
   <section class="frame" id="s01">
-    <header><div class="num">01</div><h2>Connect to repository</h2><div class="note">Stage 1 of 8 · the user supplies the git target.</div></header>
+    <header><div class="num">01</div><h2>Connect to repository</h2><div class="note">Stage 1 of 7 · the user supplies the git target.</div></header>
     <div class="app">
       <div class="titlebar">
         <div class="dots"><span></span><span></span><span></span></div>
@@ -644,11 +676,10 @@
         <div class="step active"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body">
         <h2 class="h">Where is the code?</h2>
@@ -657,18 +688,11 @@
         <div class="field">
           <label>Remote URL</label>
           <input value="git@github.internal:data-platform/sas-warehouse.git" />
-          <div class="hint">HTTPS or SSH.</div>
+          <div class="hint">HTTPS or SSH. Credentials are picked up from the ambient environment.</div>
         </div>
-        <div class="row">
-          <div class="field"><label>Branch</label><input value="feature/lineage-curation" /></div>
-          <div class="field">
-            <label>Authentication</label>
-            <select>
-              <option>SSH key (ambient)</option>
-              <option>Personal access token</option>
-              <option>None — public</option>
-            </select>
-          </div>
+        <div class="field" style="max-width: 272px;">
+          <label>Branch</label>
+          <input value="feature/lineage-curation" />
         </div>
         <div class="btn-row">
           <button class="btn">Connect</button>
@@ -689,11 +713,10 @@
         <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step active"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body">
         <div class="banner">
@@ -742,17 +765,38 @@
         <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step active"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body">
-        <h2 class="h">We found 1 gap.</h2>
+        <h2 class="h">Scan complete · 1 gap.</h2>
         <p class="hsub">Lineage can still be produced with gaps present, but missing pieces will surface as dangling references in the graph. You can fix them now (in your repo) and reconnect, or proceed and patch up later.</p>
 
-        <!-- compact summary tiles -->
+        <!-- scan-summary tiles -->
+        <div style="font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 8px;">Scanned</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 880px; margin-bottom: 22px;">
+          <div style="border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ink); font-weight: 600;">3</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">SAS files</div>
+          </div>
+          <div style="border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ink); font-weight: 600;">134</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Lines of code</div>
+          </div>
+          <div style="border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ink); font-weight: 600;">1</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Macros referenced</div>
+          </div>
+          <div style="border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 14px 16px;">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--ink); font-weight: 600;">8</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Steps identified</div>
+          </div>
+        </div>
+
+        <!-- gap summary tiles -->
+        <div style="font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 8px;">Gaps</div>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 880px; margin-bottom: 22px;">
           <div style="border: 1px solid var(--warn); background: #FCF7F0; border-radius: 6px; padding: 14px 16px;">
             <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: var(--warn); font-weight: 600;">1</div>
@@ -784,7 +828,7 @@
             <div><span class="pill warn">WARN</span></div>
             <div class="mono" style="font-size: 12px;">missing-include</div>
             <div class="mono" style="font-size: 12px;">/sas/macros/clean_text.sas</div>
-            <div class="mono" style="font-size: 11.5px; color: var(--muted);">customers_load.sas:9</div>
+            <div class="mono" style="font-size: 11.5px; color: var(--muted);">customers_load.sas:10</div>
           </div>
           <div style="padding: 11px 14px; color: var(--muted-2); font-size: 12px; font-style: italic; text-align: center;">
             No other issues found.
@@ -792,7 +836,7 @@
         </div>
 
         <div class="btn-row">
-          <button class="btn">Proceed to table lineage</button>
+          <button class="btn">Proceed to step lineage</button>
           <button class="btn secondary">Stop — I'll fix the repo first</button>
         </div>
       </div>
@@ -823,43 +867,56 @@
   </section>
 
   <!-- ================================================
-       SCREEN 05 — Table lineage explorer (the big one)
+       SCREEN 05 — Step lineage explorer
        ================================================ -->
   <section class="frame" id="s05">
-    <header><div class="num">05</div><h2>Table lineage explorer</h2><div class="note">Search left · React Flow graph centre · code pane right.</div></header>
+    <header><div class="num">05</div><h2>Step lineage explorer</h2><div class="note">Search left · graph centre (step-versioned nodes) · code pane right. Both side panes collapse.</div></header>
     <div class="app">
-      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / tables</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / steps</div><div class="demo-badge">DEMO MODE</div></div>
       <div class="progress">
         <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step active"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step active"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body split">
         <div class="split-grid">
 
           <!-- left rail -->
           <section class="rail">
-            <h3>Tables (8)</h3>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+              <h3 style="margin: 0;">Nodes (10)</h3>
+              <span title="Collapse pane" style="font-size: 14px; color: var(--muted); cursor: pointer; user-select: none;">«</span>
+            </div>
             <input class="search" placeholder="search…" value="sales" />
             <ul>
-              <li class="dim">raw.cust_master</li>
-              <li class="dim">raw.orders</li>
-              <li class="dim">stg.customers</li>
-              <li class="dim">stg.customer_segments</li>
-              <li class="dim">stg.orders_clean</li>
-              <li class="dim">mart.orders_enriched</li>
-              <li class="sel">mart.sales_monthly</li>
-              <li class="dim">mart.top_segments</li>
+              <li class="dim">raw.cust_master <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
+              <li class="dim">raw.orders <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
+              <li class="dim" style="color: var(--warn);">work.customers <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
+              <li class="dim" style="color: var(--warn);">work.customers <span style="color: var(--muted-2); font-size: 10px;">@v2</span></li>
+              <li class="dim" style="color: var(--warn);">work.customers <span style="color: var(--muted-2); font-size: 10px;">@v3</span></li>
+              <li class="dim">stg.customers <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
+              <li class="dim">stg.orders_clean <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
+              <li class="dim">mart.orders_enriched <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
+              <li class="sel">mart.sales_monthly <span style="color: var(--accent); font-size: 10px;">@v1</span></li>
+              <li class="dim">mart.top_segments <span style="color: var(--muted-2); font-size: 10px;">@v1</span></li>
             </ul>
+
             <h3 style="margin-top: 18px">Show</h3>
             <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Upstream</label>
             <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Downstream</label>
-            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" /> Synthetic nodes</label>
+            <label style="font-size: 12px; display:block; padding: 4px 0;"><input type="checkbox" checked /> Work nodes</label>
+
+            <h3 style="margin-top: 18px">Step types</h3>
+            <div style="font-size: 11.5px; line-height: 1.7; color: var(--muted)">
+              <div><span style="display:inline-block; width: 18px; height: 3px; background: #2D6F73; vertical-align: middle"></span> &nbsp; PROC</div>
+              <div><span style="display:inline-block; width: 18px; height: 3px; background: #4F7A4B; vertical-align: middle"></span> &nbsp; DATA step</div>
+              <div><span style="display:inline-block; width: 18px; height: 3px; background: #6B4F9A; vertical-align: middle"></span> &nbsp; MACRO</div>
+              <div><span style="display:inline-block; width: 18px; height: 3px; background: #6B6B66; vertical-align: middle"></span> &nbsp; Other</div>
+            </div>
           </section>
 
           <!-- graph canvas -->
@@ -874,9 +931,9 @@
             </div>
 
             <!-- right-click context menu (shown for demonstration) -->
-            <div style="position: absolute; top: 256px; left: 64%; z-index: 3; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; box-shadow: 0 6px 18px rgba(0,0,0,0.14); padding: 4px; width: 184px; font-size: 12.5px;">
+            <div style="position: absolute; top: 248px; left: 70%; z-index: 3; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; box-shadow: 0 6px 18px rgba(0,0,0,0.14); padding: 4px; width: 200px; font-size: 12.5px;">
               <div style="padding: 6px 10px 7px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 1px solid var(--line-soft); margin-bottom: 3px;">
-                Step #5 · enriched → monthly
+                Step #7 · PROC SQL
               </div>
               <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer;">View code</div>
               <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer;">Edit step…</div>
@@ -885,97 +942,113 @@
               <div style="padding: 7px 10px; border-radius: 3px; cursor: pointer; color: var(--danger);">↯ Break step (remove edge)</div>
             </div>
 
-            <svg viewBox="0 0 700 520" style="width: 100%; height: 100%;">
-              <!-- nodes -->
-              <!-- raw.cust_master -->
-              <g>
-                <rect class="node-rect" x="20" y="40" width="150" height="46" rx="4" />
-                <text class="node-sub" x="30" y="58">RAW</text>
-                <text class="node-label" x="30" y="76">cust_master</text>
-              </g>
-              <!-- raw.orders -->
-              <g>
-                <rect class="node-rect" x="20" y="220" width="150" height="46" rx="4" />
-                <text class="node-sub" x="30" y="238">RAW</text>
-                <text class="node-label" x="30" y="256">orders</text>
-              </g>
-              <!-- stg.customers -->
-              <g>
-                <rect class="node-rect" x="220" y="40" width="170" height="46" rx="4" />
-                <text class="node-sub" x="230" y="58">STG</text>
-                <text class="node-label" x="230" y="76">customers</text>
-              </g>
-              <!-- stg.customer_segments -->
-              <g>
-                <rect class="node-rect" x="220" y="120" width="170" height="46" rx="4" />
-                <text class="node-sub" x="230" y="138">STG</text>
-                <text class="node-label" x="230" y="156">customer_segments</text>
-              </g>
-              <!-- stg.orders_clean -->
-              <g>
-                <rect class="node-rect" x="220" y="220" width="170" height="46" rx="4" />
-                <text class="node-sub" x="230" y="238">STG</text>
-                <text class="node-label" x="230" y="256">orders_clean</text>
-              </g>
-              <!-- mart.orders_enriched -->
-              <g>
-                <rect class="node-rect" x="430" y="160" width="170" height="46" rx="4" />
-                <text class="node-sub" x="440" y="178">MART</text>
-                <text class="node-label" x="440" y="196">orders_enriched</text>
-              </g>
-              <!-- mart.sales_monthly (selected) -->
-              <g>
-                <rect class="node-rect sel" x="430" y="300" width="170" height="46" rx="4" />
-                <text class="node-sub" x="440" y="318" style="fill: var(--accent)">MART</text>
-                <text class="node-label" x="440" y="336" style="fill: var(--accent); font-weight: 600">sales_monthly</text>
-              </g>
-              <!-- mart.top_segments -->
-              <g>
-                <rect class="node-rect" x="430" y="430" width="170" height="46" rx="4" />
-                <text class="node-sub" x="440" y="448">MART</text>
-                <text class="node-label" x="440" y="466">top_segments</text>
-              </g>
-
-              <!-- edges with step labels -->
-              <!-- raw.cust_master -> stg.customers (1) -->
-              <path class="edge" d="M170 63 C 195 63, 195 63, 220 63" marker-end="url(#arr)" />
-              <g><rect class="edge-lbl-bg" x="180" y="50" width="30" height="14" rx="3"/><text class="edge-lbl" x="186" y="60">#1</text></g>
-              <!-- stg.customers -> stg.customer_segments (2) -->
-              <path class="edge" d="M305 86 C 305 100, 305 100, 305 120" marker-end="url(#arr)" />
-              <g><rect class="edge-lbl-bg" x="290" y="96" width="30" height="14" rx="3"/><text class="edge-lbl" x="296" y="106">#2</text></g>
-              <!-- raw.orders -> stg.orders_clean (3) -->
-              <path class="edge" d="M170 243 C 195 243, 195 243, 220 243" marker-end="url(#arr)" />
-              <g><rect class="edge-lbl-bg" x="180" y="230" width="30" height="14" rx="3"/><text class="edge-lbl" x="186" y="240">#3</text></g>
-              <!-- stg.orders_clean -> mart.orders_enriched (4) -->
-              <path class="edge" d="M390 243 C 410 220, 410 200, 430 195" marker-end="url(#arr)" />
-              <!-- stg.customers -> mart.orders_enriched (4) -->
-              <path class="edge" d="M390 63 C 420 100, 410 160, 430 175" marker-end="url(#arr)" />
-              <!-- stg.customer_segments -> mart.orders_enriched (4) -->
-              <path class="edge" d="M390 143 C 410 160, 410 175, 430 185" marker-end="url(#arr)" />
-              <g><rect class="edge-lbl-bg" x="402" y="156" width="30" height="14" rx="3"/><text class="edge-lbl" x="408" y="166">#4</text></g>
-              <!-- mart.orders_enriched -> mart.sales_monthly (5) selected -->
-              <path class="edge sel" d="M515 206 C 515 240, 515 260, 515 300" marker-end="url(#arr-sel)" />
-              <g><rect class="edge-lbl-bg sel" x="498" y="246" width="34" height="14" rx="3"/><text class="edge-lbl" x="502" y="256" style="fill: var(--accent); font-weight:600">#5</text></g>
-              <!-- mart.sales_monthly -> mart.top_segments (6) -->
-              <path class="edge" d="M515 346 C 515 380, 515 400, 515 430" marker-end="url(#arr)" />
-              <g><rect class="edge-lbl-bg" x="498" y="380" width="34" height="14" rx="3"/><text class="edge-lbl" x="502" y="390">#6</text></g>
-
+            <svg viewBox="0 0 700 460" style="width: 100%; height: 100%;">
               <defs>
-                <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                  <path d="M0 0 L10 5 L0 10 z" fill="#1A1A17" />
-                </marker>
-                <marker id="arr-sel" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                  <path d="M0 0 L10 5 L0 10 z" fill="#2D6F73" />
-                </marker>
+                <marker id="arr-proc"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2D6F73" /></marker>
+                <marker id="arr-data"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4F7A4B" /></marker>
+                <marker id="arr-macro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B4F9A" /></marker>
               </defs>
+
+              <!-- ============ Lane 1: customers chain (x=20, width=210) ============ -->
+              <g>
+                <rect class="node-rect" x="20" y="25" width="210" height="48" rx="4" />
+                <text class="node-sub"   x="32" y="44">RAW · @v1</text>
+                <text class="node-label" x="32" y="62">cust_master</text>
+              </g>
+              <g>
+                <rect x="20" y="90"  width="210" height="48" rx="4" fill="#FFFCF1" stroke="#C77B3F" stroke-dasharray="4 3" stroke-width="1" />
+                <text class="node-sub"   x="32" y="109">WORK · @v1</text>
+                <text class="node-label" x="32" y="127">customers</text>
+              </g>
+              <g>
+                <rect x="20" y="155" width="210" height="48" rx="4" fill="#FFFCF1" stroke="#C77B3F" stroke-dasharray="4 3" stroke-width="1" />
+                <text class="node-sub"   x="32" y="174">WORK · @v2</text>
+                <text class="node-label" x="32" y="192">customers</text>
+              </g>
+              <g>
+                <rect x="20" y="220" width="210" height="48" rx="4" fill="#FFFCF1" stroke="#C77B3F" stroke-dasharray="4 3" stroke-width="1" />
+                <text class="node-sub"   x="32" y="239">WORK · @v3</text>
+                <text class="node-label" x="32" y="257">customers</text>
+              </g>
+              <g>
+                <rect class="node-rect" x="20" y="285" width="210" height="48" rx="4" />
+                <text class="node-sub"   x="32" y="304">STG · @v1</text>
+                <text class="node-label" x="32" y="322">customers</text>
+              </g>
+
+              <!-- ============ Lane 2: orders chain (x=260, width=200) ============ -->
+              <g>
+                <rect class="node-rect" x="260" y="25" width="200" height="48" rx="4" />
+                <text class="node-sub"   x="272" y="44">RAW · @v1</text>
+                <text class="node-label" x="272" y="62">orders</text>
+              </g>
+              <g>
+                <rect class="node-rect" x="260" y="90" width="200" height="48" rx="4" />
+                <text class="node-sub"   x="272" y="109">STG · @v1</text>
+                <text class="node-label" x="272" y="127">orders_clean</text>
+              </g>
+
+              <!-- ============ Lane 3: mart chain (x=490, width=190) ============ -->
+              <g>
+                <rect class="node-rect" x="490" y="200" width="190" height="48" rx="4" />
+                <text class="node-sub"   x="502" y="219">MART · @v1</text>
+                <text class="node-label" x="502" y="237">orders_enriched</text>
+              </g>
+              <g>
+                <rect class="node-rect sel" x="490" y="290" width="190" height="48" rx="4" />
+                <text class="node-sub"   x="502" y="309" style="fill: var(--accent)">MART · @v1</text>
+                <text class="node-label" x="502" y="327" style="fill: var(--accent); font-weight: 600">sales_monthly</text>
+              </g>
+              <g>
+                <rect class="node-rect" x="490" y="380" width="190" height="48" rx="4" />
+                <text class="node-sub"   x="502" y="399">MART · @v1</text>
+                <text class="node-label" x="502" y="417">top_segments</text>
+              </g>
+
+              <!-- ============ EDGES ============ -->
+              <!-- step 1 — raw.cust_master → work.customers@v1 (PROC) -->
+              <path d="M 125 73 L 125 90" stroke="#2D6F73" stroke-width="1.6" fill="none" marker-end="url(#arr-proc)" />
+              <g><rect x="138" y="74" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#2D6F73"/><text x="142" y="84" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#2D6F73">#1</text></g>
+
+              <!-- step 2 — work.customers@v1 → @v2 (DATA step) -->
+              <path d="M 125 138 L 125 155" stroke="#4F7A4B" stroke-width="1.6" fill="none" marker-end="url(#arr-data)" />
+              <g><rect x="138" y="139" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#4F7A4B"/><text x="142" y="149" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#4F7A4B">#2</text></g>
+
+              <!-- step 3 — work.customers@v2 → @v3 (DATA step) -->
+              <path d="M 125 203 L 125 220" stroke="#4F7A4B" stroke-width="1.6" fill="none" marker-end="url(#arr-data)" />
+              <g><rect x="138" y="204" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#4F7A4B"/><text x="142" y="214" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#4F7A4B">#3</text></g>
+
+              <!-- step 4 — work.customers@v3 → stg.customers@v1 (PROC) -->
+              <path d="M 125 268 L 125 285" stroke="#2D6F73" stroke-width="1.6" fill="none" marker-end="url(#arr-proc)" />
+              <g><rect x="138" y="269" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#2D6F73"/><text x="142" y="279" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#2D6F73">#4</text></g>
+
+              <!-- step 5 — raw.orders → stg.orders_clean@v1 (PROC) -->
+              <path d="M 360 73 L 360 90" stroke="#2D6F73" stroke-width="1.6" fill="none" marker-end="url(#arr-proc)" />
+              <g><rect x="373" y="74" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#2D6F73"/><text x="377" y="84" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#2D6F73">#5</text></g>
+
+              <!-- step 6 — stg.orders_clean@v1 + stg.customers@v1 → mart.orders_enriched@v1 (PROC, two sources) -->
+              <path d="M 460 114 C 530 114, 530 224, 490 224" stroke="#2D6F73" stroke-width="1.4" fill="none" marker-end="url(#arr-proc)" />
+              <path d="M 230 309 C 400 309, 400 224, 490 224" stroke="#2D6F73" stroke-width="1.4" fill="none" marker-end="url(#arr-proc)" />
+              <g><rect x="455" y="195" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#2D6F73"/><text x="459" y="205" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#2D6F73">#6</text></g>
+
+              <!-- step 7 — mart.orders_enriched@v1 → mart.sales_monthly@v1 (PROC, SELECTED — thicker) -->
+              <path d="M 585 248 L 585 290" stroke="#2D6F73" stroke-width="3" fill="none" marker-end="url(#arr-proc)" />
+              <g><rect x="600" y="260" width="28" height="16" rx="3" fill="#FFFFFF" stroke="#2D6F73" stroke-width="1.5"/><text x="605" y="271" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#2D6F73" font-weight="600">#7</text></g>
+
+              <!-- step 8 — mart.sales_monthly@v1 → mart.top_segments@v1 (PROC) -->
+              <path d="M 585 338 L 585 380" stroke="#2D6F73" stroke-width="1.6" fill="none" marker-end="url(#arr-proc)" />
+              <g><rect x="600" y="350" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#2D6F73"/><text x="604" y="360" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#2D6F73">#8</text></g>
             </svg>
           </section>
 
           <!-- code pane -->
           <section class="code-pane">
-            <div class="head">
-              <div class="path">src/sas/sales_summary.sas</div>
-              <div class="meta">step #5 · lines 8–20 · target <span class="mono">mart.sales_monthly</span></div>
+            <div class="head" style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div class="path">src/sas/sales_summary.sas</div>
+                <div class="meta">step #7 · PROC SQL · lines 8–21 · target <span class="mono">mart.sales_monthly @v1</span></div>
+              </div>
+              <span title="Collapse pane" style="font-size: 14px; color: var(--muted); cursor: pointer; user-select: none; margin-left: 8px;">»</span>
             </div>
             <pre><span class="ln"> 1</span> libname mart "/data/mart";
 <span class="ln"> 2</span>
@@ -997,12 +1070,12 @@
 <span class="hl-line"><span class="ln">18</span>         sum(discount_amount)       as total_discount</span>
 <span class="hl-line"><span class="ln">19</span>     from mart.orders_enriched</span>
 <span class="hl-line"><span class="ln">20</span>     group by 1, 2, 3;</span>
-<span class="ln">21</span> quit;</pre>
+<span class="hl-line"><span class="ln">21</span> quit;</span></pre>
             <div class="actions">
               <button class="btn secondary">Edit step…</button>
               <button class="btn ghost">Open file</button>
               <div style="flex:1"></div>
-              <button class="btn">Save lineage…</button>
+              <button class="btn">Continue → Pick columns</button>
             </div>
           </section>
 
@@ -1010,6 +1083,7 @@
       </div>
     </div>
   </section>
+
 
   <!-- ================================================
        SCREEN 06 — Add step dialog (redesigned)
@@ -1120,92 +1194,20 @@
   </section>
 
   <!-- ================================================
-       SCREEN 08 — Save table lineage
+       SCREEN 08 — Pick columns
        ================================================ -->
   <section class="frame" id="s08">
-    <header><div class="num">08</div><h2>Save table lineage to branch</h2><div class="note">Diff view, confirm write.</div></header>
-    <div class="app">
-      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / save-tables</div><div class="demo-badge">DEMO MODE</div></div>
-      <div class="progress">
-        <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
-        <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
-        <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step active"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
-      </div>
-      <div class="body">
-        <h2 class="h">Commit table lineage to <span class="mono">feature/lineage-curation</span></h2>
-        <p class="hsub">Summary of what gets written to <span class="mono">lineage/table-lineage.csv</span>.</p>
-
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 880px; margin-bottom: 24px;">
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">8</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Lineage rows</div>
-          </div>
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">6</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Distinct steps</div>
-          </div>
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">8</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Tables involved</div>
-          </div>
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">3</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">SAS files referenced</div>
-          </div>
-        </div>
-
-        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; background: var(--surface); margin-bottom: 18px; font-size: 12.5px;">
-          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
-            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Target file</span>
-            <span class="mono">lineage/table-lineage.csv</span>
-            <span class="pill ok">NEW FILE</span>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
-            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Branch</span>
-            <span class="mono">feature/lineage-curation</span>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: baseline;">
-            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Schema</span>
-            <span class="mono">target_table, source_table, step_no, sas_file, start_line, end_line</span>
-          </div>
-        </div>
-
-        <div class="field" style="max-width: 880px;">
-          <label>Commit message</label>
-          <input value="Add table-level lineage from initial curation pass" />
-        </div>
-
-        <div class="btn-row">
-          <button class="btn">Commit &amp; push</button>
-          <button class="btn ghost">Back to graph</button>
-          <div style="flex:1"></div>
-          <button class="btn secondary">Continue to column lineage →</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================
-       SCREEN 09 — Pick columns
-       ================================================ -->
-  <section class="frame" id="s09">
-    <header><div class="num">09</div><h2>Pick columns to trace</h2><div class="note">Multi-select tree, table → columns.</div></header>
+    <header><div class="num">08</div><h2>Pick columns to trace</h2><div class="note">Multi-select tree, table → columns.</div></header>
     <div class="app">
       <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / columns</div><div class="demo-badge">DEMO MODE</div></div>
       <div class="progress">
         <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step done"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step active"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step active"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body">
         <h2 class="h">Which columns matter?</h2>
@@ -1251,10 +1253,10 @@
   </section>
 
   <!-- ================================================
-       SCREEN 10 — LLM in progress
+       SCREEN 09 — LLM in progress
        ================================================ -->
-  <section class="frame" id="s10">
-    <header><div class="num">10</div><h2>LLM in progress</h2><div class="note">Brief loading state while column lineage is generated.</div></header>
+  <section class="frame" id="s09">
+    <header><div class="num">09</div><h2>LLM in progress</h2><div class="note">Brief loading state while column lineage is generated.</div></header>
     <div class="app">
       <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / columns / trace</div><div class="demo-badge">DEMO MODE</div></div>
       <div class="body">
@@ -1275,21 +1277,20 @@
   </section>
 
   <!-- ================================================
-       SCREEN 11 — Column lineage explorer
+       SCREEN 10 — Column lineage explorer
        ================================================ -->
-  <section class="frame" id="s11">
-    <header><div class="num">11</div><h2>Column lineage explorer</h2><div class="note">Columns grouped by table · edges typed · steps cannot be added at this level.</div></header>
+  <section class="frame" id="s10">
+    <header><div class="num">10</div><h2>Column lineage explorer</h2><div class="note">Columns grouped by table · edges typed · steps cannot be added at this level.</div></header>
     <div class="app">
       <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / columns</div><div class="demo-badge">DEMO MODE</div></div>
       <div class="progress">
         <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step done"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step done"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step active"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step done"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step active"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body split">
         <div class="split-grid">
@@ -1491,9 +1492,11 @@
                 </label>
               </div>
 
-              <div style="display: flex; gap: 8px; margin-top: 12px;">
-                <button class="btn">Save</button>
+              <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                <button class="btn secondary">Save edit</button>
                 <button class="btn ghost">Revert</button>
+                <div style="flex: 1;"></div>
+                <button class="btn">Continue → Commit</button>
               </div>
             </div>
           </section>
@@ -1504,77 +1507,106 @@
   </section>
 
   <!-- ================================================
-       SCREEN 12 — Save column lineage
+       SCREEN 11 — Save column lineage
        ================================================ -->
-  <section class="frame" id="s12">
-    <header><div class="num">12</div><h2>Save column lineage to branch</h2><div class="note">OpenLineage JSON, write-confirm.</div></header>
+  <section class="frame" id="s11">
+    <header><div class="num">11</div><h2>Commit lineage to branch</h2><div class="note">Single commit at the end of the flow — writes both files in one go.</div></header>
     <div class="app">
-      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / save-columns</div><div class="demo-badge">DEMO MODE</div></div>
+      <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><div class="url">lineage.local / save</div><div class="demo-badge">DEMO MODE</div></div>
       <div class="progress">
         <div class="step done"><div class="n">01</div><div class="label">Connect</div></div>
         <div class="step done"><div class="n">02</div><div class="label">Folders</div></div>
         <div class="step done"><div class="n">03</div><div class="label">Analysis</div></div>
-        <div class="step done"><div class="n">04</div><div class="label">Table lineage</div></div>
-        <div class="step done"><div class="n">05</div><div class="label">Save tables</div></div>
-        <div class="step done"><div class="n">06</div><div class="label">Pick columns</div></div>
-        <div class="step done"><div class="n">07</div><div class="label">Column lineage</div></div>
-        <div class="step active"><div class="n">08</div><div class="label">Save columns</div></div>
+        <div class="step done"><div class="n">04</div><div class="label">Step lineage</div></div>
+        <div class="step done"><div class="n">05</div><div class="label">Pick columns</div></div>
+        <div class="step done"><div class="n">06</div><div class="label">Column lineage</div></div>
+        <div class="step active"><div class="n">07</div><div class="label">Save</div></div>
       </div>
       <div class="body">
-        <h2 class="h">Commit column lineage to <span class="mono">feature/lineage-curation</span></h2>
-        <p class="hsub">Summary of what gets written to <span class="mono">lineage/column-lineage.json</span> (OpenLineage column-lineage facet).</p>
+        <h2 class="h">One commit, two files</h2>
+        <p class="hsub">Branch <span class="mono">feature/lineage-curation</span>. Step lineage and column lineage are written together in a single commit.</p>
 
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 880px; margin-bottom: 18px;">
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">2</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Output columns traced</div>
-          </div>
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--ink); font-weight: 600;">9</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Input field mappings</div>
-          </div>
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--accent); font-weight: 600;">4</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Direct transformations</div>
-          </div>
-          <div style="border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; background: var(--surface);">
-            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 28px; color: var(--warn); font-weight: 600;">5</div>
-            <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Indirect transformations</div>
-          </div>
-        </div>
+        <!-- TWO FILE CARDS SIDE BY SIDE -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 880px; margin-bottom: 22px;">
 
-        <!-- subtype breakdown -->
-        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; background: var(--surface); margin-bottom: 18px;">
-          <div style="font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 10px;">Subtype breakdown</div>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px;">
-            <span class="pill">AGGREGATION × 1</span>
-            <span class="pill">IDENTITY × 1</span>
-            <span class="pill">TRANSFORMATION × 2</span>
-            <span class="pill warn">GROUP_BY × 3</span>
-            <span class="pill warn">JOIN × 1</span>
-            <span class="pill warn">FILTER × 1</span>
+          <!-- step-lineage.csv card -->
+          <div style="border: 1px solid var(--line); border-radius: 6px; background: var(--surface); overflow: hidden;">
+            <div style="padding: 12px 16px; background: #F4F4EE; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline;">
+              <span class="mono" style="font-size: 12.5px; font-weight: 600;">lineage/step-lineage.csv</span>
+              <span class="pill ok">NEW FILE</span>
+            </div>
+            <div style="padding: 16px 18px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600;">9</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Lineage rows</div>
+                </div>
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600;">8</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Distinct steps</div>
+                </div>
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600;">10</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Table versions</div>
+                </div>
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600;">3</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">SAS files referenced</div>
+                </div>
+              </div>
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: 11px; color: var(--muted);">
+                <div style="margin-bottom: 4px;">Step type mix</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 11.5px;">
+                  <span style="background: #E3EFEF; color: #2D6F73; padding: 1px 8px; border-radius: 999px;">PROC × 6</span>
+                  <span style="background: #E2ECDD; color: #4F7A4B; padding: 1px 8px; border-radius: 999px;">DATA × 2</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div style="max-width: 880px; border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; background: var(--surface); margin-bottom: 18px; font-size: 12.5px;">
-          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
-            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Target file</span>
-            <span class="mono">lineage/column-lineage.json</span>
-            <span class="pill ok">NEW FILE</span>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
-            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Branch</span>
-            <span class="mono">feature/lineage-curation</span>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: baseline;">
-            <span style="color: var(--muted); width: 110px; font-size: 11.5px;">Schema</span>
-            <span class="mono" style="font-size: 11.5px;">openlineage.io/spec/facets/1-2-0/ColumnLineageDatasetFacet.json</span>
+          <!-- column-lineage.json card -->
+          <div style="border: 1px solid var(--line); border-radius: 6px; background: var(--surface); overflow: hidden;">
+            <div style="padding: 12px 16px; background: #F4F4EE; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline;">
+              <span class="mono" style="font-size: 12.5px; font-weight: 600;">lineage/column-lineage.json</span>
+              <span class="pill ok">NEW FILE</span>
+            </div>
+            <div style="padding: 16px 18px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600;">2</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Columns traced</div>
+                </div>
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600;">9</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Input mappings</div>
+                </div>
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600; color: var(--accent);">4</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Direct</div>
+                </div>
+                <div>
+                  <div style="font-family: ui-monospace, Menlo, monospace; font-size: 22px; font-weight: 600; color: var(--warn);">5</div>
+                  <div style="font-size: 11.5px; color: var(--muted);">Indirect</div>
+                </div>
+              </div>
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: 11px; color: var(--muted);">
+                <div style="margin-bottom: 4px;">Subtype mix</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px;">
+                  <span class="pill" style="font-size: 10.5px;">AGG × 1</span>
+                  <span class="pill" style="font-size: 10.5px;">IDENT × 1</span>
+                  <span class="pill" style="font-size: 10.5px;">TRANS × 2</span>
+                  <span class="pill warn" style="font-size: 10.5px;">GRP × 3</span>
+                  <span class="pill warn" style="font-size: 10.5px;">JOIN × 1</span>
+                  <span class="pill warn" style="font-size: 10.5px;">FILT × 1</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="field" style="max-width: 880px;">
           <label>Commit message</label>
-          <input value="Add column lineage for 2 mart.sales_monthly columns" />
+          <input value="Add curated SAS lineage: step + column" />
         </div>
 
         <div class="btn-row">
@@ -1585,7 +1617,7 @@
         </div>
 
         <div style="margin-top: 28px; padding: 14px 18px; border: 1px dashed var(--line); background: #FBFBF7; border-radius: 6px; max-width: 880px; font-size: 12.5px; color: var(--muted);">
-          <strong style="color: var(--ink)">After commit:</strong> the branch contains <span class="mono">lineage/table-lineage.csv</span> and <span class="mono">lineage/column-lineage.json</span>. Open a PR from <span class="mono">feature/lineage-curation</span> to merge the curated lineage into <span class="mono">main</span>.
+          <strong style="color: var(--ink)">After commit:</strong> the branch contains both <span class="mono">lineage/step-lineage.csv</span> and <span class="mono">lineage/column-lineage.json</span>. Open a PR from <span class="mono">feature/lineage-curation</span> to merge the curated lineage into <span class="mono">main</span>.
         </div>
       </div>
     </div>

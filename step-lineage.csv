@@ -1,0 +1,10 @@
+source_table,source_table_version,target_table,target_table_version,step_number,sas_file,starting_line,ending_line
+raw.cust_master,v1,work.customers,v1,1,customers_load.sas,15,27
+work.customers,v1,work.customers,v2,2,customers_load.sas,30,36
+work.customers,v2,work.customers,v3,3,customers_load.sas,39,46
+work.customers,v3,stg.customers,v1,4,customers_load.sas,49,59
+raw.orders,v1,stg.orders_clean,v1,5,orders_transform.sas,11,23
+stg.orders_clean,v1,mart.orders_enriched,v1,6,orders_transform.sas,26,36
+stg.customers,v1,mart.orders_enriched,v1,6,orders_transform.sas,26,36
+mart.orders_enriched,v1,mart.sales_monthly,v1,7,sales_summary.sas,8,20
+mart.sales_monthly,v1,mart.top_segments,v1,8,sales_summary.sas,22,31
